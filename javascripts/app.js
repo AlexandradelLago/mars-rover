@@ -7,7 +7,19 @@ var roverObj = {
   y : 0,
   travelLog:[]
 };
-var commandListObj = "rffrfflfrff";
+var commandListObj = "rffrfffff";
+var gridObj =[
+  ['','','','','','','','','',''],
+  ['','','','','','','','','',''],
+  ['','','','','','','','','',''],
+  ['','','X','X','','','','','',''],
+  ['','','','','','','','','',''],
+  ['','','','','','','','','',''],
+  ['','','','','','','','','',''],
+  ['','','','','','','','','',''],
+  ['','','','','','','','','',''],
+  ['','','','','','','','','','']
+];
 // ======================
 function turnLeft(rover){
   console.log("turnLeft was called!");
@@ -51,28 +63,44 @@ function turnRight(rover){
   console.log("direction:" + rover.direction);
 }
 
-function moveForward(rover){
+function moveForward(rover,grid){
   console.log("moveForward was called");
-
+/*  var obstacle={x: rover.x, y: rover.y};*/
   if (rover.direction ==="N" && rover.y > 0 ) {
+    if (grid[rover.x][rover.y-1]!="X"){
     rover.y -= 1;
+    }else {
+      console.log("Obstacle found");
+    }
 
   } else if (rover.direction==="S" && rover.y < 9) {
+
+    if (grid[rover.x][rover.y+1]!="X"){
     rover.y +=1;
+    }else {
+      console.log("Obstacle found");
+    }
 
   } else if (rover.direction==="E" && rover.x < 9) {
+    if (grid[rover.x-1][rover.y]!="X"){
     rover.x += 1;
+    } else {
+      console.log("Obstacle found");
+    }
 
   } else if (rover.direction==="W" && rover.x > 0) {
+    if (grid[rover.x-1][rover.y]!="X") {
     rover.x -= 1;
-
+    } else {
+      console.log("Obstacle found");
+    }
   } else if (rover) {
     console.log (" Rover is in the border. Turn it!");
   }
   console.log("x = " + rover.x + " y = " + rover.y);
 }
 
-function moveBackwards(rover){
+function moveBackwards(rover,grid){
   console.log("moveBackwards was called");
 
   if (rover.direction ==="N" && rover.y < 9 ) {
@@ -93,11 +121,12 @@ function moveBackwards(rover){
 }
 
 
-function commandList(commandroute,rover){
+function commandList(commandroute,rover,grid){
+  var validcommand = true;
   for (var i = 0; i < (commandroute.length-1); i++) {
     switch (commandroute[i]) {
       case "f":
-         moveForward(rover);
+         moveForward(rover,grid);
         break;
       case "r":
          turnRight(rover);
@@ -105,16 +134,19 @@ function commandList(commandroute,rover){
       case "l":
          turnLeft(rover);
       break;
+      case "b":
+         moveBackwards(rover,grid);
+      break;
       default:
+      validcommand= false;
       console.log ("Wrong Command");
     }
    console.log("x = " + rover.x + " y = " + rover.y);
-    /**
-     * if (validcommand) {
-     */
+
+     if (validcommand) {
       var coord = { x: rover.x, y: rover.y };
       rover.travelLog.push(coord);
-    /*}*/
+    }
   }
   console.log(rover.travelLog);
 }
